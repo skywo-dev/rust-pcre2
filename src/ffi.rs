@@ -309,11 +309,12 @@ pub(crate) struct MatchConfig {
     /// When set, a custom JIT stack will be created with the given maximum
     /// size.
     pub(crate) max_jit_stack_size: Option<usize>,
+    pub(crate) match_limit: Option<u32>
 }
 
 impl Default for MatchConfig {
     fn default() -> MatchConfig {
-        MatchConfig { max_jit_stack_size: None }
+        MatchConfig { max_jit_stack_size: None, match_limit: None }
     }
 }
 
@@ -368,6 +369,15 @@ impl MatchData {
             )
         };
         assert!(!match_data.is_null(), "failed to allocate match data block");
+
+        match config.match_limit {
+            None => {},
+            Some(match_limit) => {
+                unsafe {
+                    pcre2_set_match_limit_8(match_context, match_limit);
+                }
+            }
+        }
 
         let jit_stack = match config.max_jit_stack_size {
             None => None,

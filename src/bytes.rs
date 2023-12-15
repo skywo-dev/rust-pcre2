@@ -348,6 +348,15 @@ impl RegexBuilder {
         self.config.match_config.max_jit_stack_size = bytes;
         self
     }
+
+    /// 设置最大匹配次数
+    pub fn match_limit(
+        &mut self,
+        match_limit: Option<u32>
+    ) -> &mut RegexBuilder {
+        self.config.match_config.match_limit = match_limit;
+        self
+    }
 }
 
 /// A compiled PCRE2 regular expression.
